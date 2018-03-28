@@ -1,4 +1,5 @@
 # Shell scripts
 *.sh eol=lf
+*.conf eof=lf
 configure eol=lf
 configure.ac eol=lf
