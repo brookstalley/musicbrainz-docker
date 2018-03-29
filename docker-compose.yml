@@ -1,12 +1,8 @@
 version: '2'
 
 volumes:
-  pgdata:
-    driver: local
-  indexdata:
-    driver: local
-  dbdump:
-    driver: local
+  postgresql-volume:
+    external: true
 
 services:
   db:
@@ -15,7 +11,7 @@ services:
     env_file:
       - ./postgres-dockerfile/postgres.env
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgresql-volume:/var/lib/postgresql/data
     expose:
       - "5432"
 
@@ -24,8 +20,8 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - dbdump:/media/dbdump
-    restart: unless-stopped
+      - d:\MetaBrainz\dbdump:/media/dbdump
+    restart: "no"
     env_file:
       - ./postgres-dockerfile/postgres.env
     environment:
@@ -40,7 +36,7 @@ services:
     depends_on:
       - db
     volumes:
-      - indexdata:/home/search/indexdata
+      - d:\MetaBrainz\indexdata:/home/search/indexdata
 
   search:
     build: search-dockerfile
@@ -48,7 +44,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - indexdata:/home/search/indexdata
+      - d:\MetaBrainz\indexdata:/home/search/indexdata
 
   redis:
     image: redis:3.2.1
